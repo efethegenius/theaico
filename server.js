@@ -49,21 +49,21 @@ function generatePrompt(question) {
 }
 
 client.on("message", async (message) => {
-  if (message.body) {
-    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-    const test = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: generatePrompt(message.body),
-      temperature: 0.5,
-      max_tokens: 60,
-      top_p: 0.3,
-      frequency_penalty: 0.5,
-      presence_penalty: 0.0,
-    });
-
-    console.log(test);
-
-    message.reply(test && test.data.choices[0].text);
+  try {
+    if (message.body) {
+      const test = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: generatePrompt(message.body),
+        temperature: 0.5,
+        max_tokens: 60,
+        top_p: 0.3,
+        frequency_penalty: 0.5,
+        presence_penalty: 0.0,
+      });
+      message.reply(test && test.data.choices[0].text);
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
